@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class FireBalle : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float speed = 10.0f;
+    public int damage = 1;
+
+    private void Update()
     {
-        
+        transform.Translate(0, 0, speed * Time.deltaTime);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        PlayerCharacter player = other.GetComponent<PlayerCharacter>();
+
+        if (player != null)
+        {
+            player.Hurt(damage);
+        }
+        Destroy(this.gameObject);
     }
 }

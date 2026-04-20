@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class WanderingAI : MonoBehaviour
 {
+    [SerializeField] private GameObject fireBallPrefab;
+    private GameObject _fireBall;
+
     // Слежение за состоянием персонажа.
     private bool _alive;
 
@@ -13,7 +16,6 @@ public class WanderingAI : MonoBehaviour
      */ 
     public float speed = 3.0f;
     public float obstacleRange = 5.0f;
-
 
     private void Start()
     {
@@ -37,10 +39,24 @@ public class WanderingAI : MonoBehaviour
             // вокруг него окружностью.
             if (Physics.SphereCast(ray, 0.75f, out hit))
             {
-                if (hit.distance < obstacleRange)
+                GameObject hitObject = hit.transform.gameObject;
+
+                if(hitObject.GetComponent<PlayerCharacter>())
+                {
+                    if(_fireBall == null)
+                    {
+                        _fireBall = Instantiate(fireBallPrefab) as GameObject;
+
+                        // Поместим огненный шар перед врагом и нацелим в направлении 
+                        // его движения.
+                        _fireBall.transform.position = transform.TransformPoint(Vector3.forward * 1.5f);
+                        _fireBall.transform.rotation = transform.rotation;
+                    }
+                }
+                else if (hit.distance < obstacleRange)
                 {
                     // Поворот с наполовину случайным  выбором нового направления.
-                    float angle = (Random.Range(-110, 110));
+                    float angle = Random.Range(-110, 110);
                     transform.Rotate(0, angle, 0);
                 }
             }
