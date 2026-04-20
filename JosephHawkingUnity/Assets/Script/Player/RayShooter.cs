@@ -8,6 +8,8 @@ public class RayShooter : MonoBehaviour
     void Start()
     {
         _camera = GetComponent<Camera>();
+
+        // Скрываем указатель мыши в центре экрана.
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -18,10 +20,17 @@ public class RayShooter : MonoBehaviour
         // Выстрел.
         if (Input.GetMouseButtonDown(0))
         {
+            // Середина экрана.
             Vector3 point = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
+
+            // Создание в этой точке луча методом ScreenPointToRay(point);
             Ray ray = _camera.ScreenPointToRay(point);
+
+            // Переменная для хранение данных луча.
             RaycastHit hit;
-            if(Physics.Raycast(ray, out hit))
+
+            // Испущенный луч заполняет информацией переменную, на которую имеется ссылка.
+            if (Physics.Raycast(ray, out hit))
             {
                 GameObject hitObject = hit.transform.gameObject;
                 ReactiveTarget reactiveTarget = hitObject.GetComponent<ReactiveTarget>();
@@ -31,6 +40,7 @@ public class RayShooter : MonoBehaviour
                 }
                 else
                 {
+                    // Загружаем координаты точки, в которую попал луч.
                     StartCoroutine(SphereIndicator(hit.point));
                 }
             }           
@@ -57,6 +67,8 @@ public class RayShooter : MonoBehaviour
         float posX = _camera.pixelWidth / 2 - size / 4;
         float posY = _camera.pixelHeight / 2 - size / 2;
 
+
+        // Команда GUI.Label() отображает на экране символ.
         GUI.Label(new Rect(posX, posY, size, size), "*");
     }
 }
